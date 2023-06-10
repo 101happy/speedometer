@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>PureKnob Testing</title>
+    <script src="pureknob.js"></script>
+    <style>
+    body {
+     text-align: center;
+    }
+    </style>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript">
+      // Check if the page has loaded completely
+      $(document).ready( function() {
+          $('#nothing').load('testing.php');
+      });
+    </script>
+  </head>
+  <body>
+    <div id="demo"></div>
+    <button onclick="waltuh()">Please click me to change number</button>
+    <div id="nothing"></div>
+    <script type="text/javascript">
+      // Create knob element, 300 x 300 px in size.
+const knob = pureknob.createKnob(300, 300);
+
+knob.setProperty('val', 0);
+// Set properties.
+knob.setProperty('angleStart', -0.75 * Math.PI);
+knob.setProperty('angleEnd', 0.75 * Math.PI);
+knob.setProperty('colorFG', '#0066ff');
+knob.setProperty('trackWidth', 0.4);
+knob.setProperty('readonly', true);
+knob.setProperty('valMin', -20);
+knob.setProperty('valMax', 40);
+knob.setProperty('textScale', 0.75);
+knob.setProperty('fnValueToString', function(value) {
+	let string = value.toString();
+
+	const result = string + "°C";
+	return result;
+});
+
+
+// Create element node.
+const node = knob.node();
+// Add it to the DOM.
+const elem = document.getElementById('demo');
+elem.appendChild(node);
+
+function getCook(cookiename)
+  {
+  // Get name followed by anything except a semicolon
+  var cookiestring=RegExp(cookiename+"=[^;]+").exec(document.cookie);
+  // Return everything after the equal sign, or an empty string if the cookie name not found
+  return decodeURIComponent(!!cookiestring ? cookiestring.toString().replace(/^[^=]+./,"") : "");
+  }
+
+  function generateRandomInteger(min, max) {
+    return Math.floor(min + Math.random()*(max - min + 1))
+  }
+
+function waltuh() {
+  document.cookie = "temp=" + generateRandomInteger(-20, 40);
+}
+
+//Sample usage
+var cookieValue = getCook('temp');
+
+i = Number(cookieValue.replace('%0A',''));
+knob.setValue(i);
+if (i > 30) {
+  knob.setProperty('colorFG', '#e01b24');
+}
+if (i => 10) {
+  if (i <= 30){
+    knob.setProperty('colorFG', '#33cc33');
+  }
+}
+if (i < 10) {
+  knob.setProperty('colorFG', '#0066ff');
+}
+
+if (navigator.userAgent.indexOf("Firefox") < 0) {
+cookieStore.addEventListener('change', ({changed}) => {
+    for (const {name, value} of changed) {
+        if (name == "temp") {
+          i = Number(value.replace('%0A',''));
+          console.log(value);
+          knob.setValue(i);
+          if (i > 30) {
+            knob.setProperty('colorFG', '#e01b24');
+          }
+          if (i => 10) {
+            if (i <= 30){
+              knob.setProperty('colorFG', '#33cc33');
+            }
+          }
+          if (i < 10) {
+            knob.setProperty('colorFG', '#0066ff');
+          }
+        }
+    }
+})
+};
+
+    </script>
+  </body>
+</html>
